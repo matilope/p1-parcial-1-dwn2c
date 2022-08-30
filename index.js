@@ -26,10 +26,7 @@ const Cargar = () => {
   } while (!isNaN(autor));
 
   do {
-    codigoUnico = parseInt(prompt("Ingresa el codigo numérico único del disco"));
-    while (!(codigoUnico >= 1 && codigoUnico <= 999)) {
-      codigoUnico = parseInt(prompt("Ingresa el codigo unico del disco y recuerda que tiene que ser entre 1 y 999 inclusive"));
-    }
+    codigoUnico = parseInt(prompt("Ingresa el codigo numérico único del disco (1-999)"));
     if (local) {
       for (let i = 0; i < local.length; i++) {
         while (local[i].codigoUnico == codigoUnico) {
@@ -37,7 +34,7 @@ const Cargar = () => {
         }
       }
     }
-  } while (isNaN(codigoUnico));
+  } while (!(codigoUnico >= 1 && codigoUnico <= 999));
 
   do {
     do {
@@ -125,6 +122,9 @@ const Mostrar = () => {
     let h2 = document.createElement("h2");
     section.appendChild(h2);
     h2.textContent = "Discos ingresados";
+
+    /* informar cantidad de discos ingresados */
+    alertPersonalizado("Discos ingresados: " + local.length);
 
     /* Recorriendo el array de objetos de localstorage */
     for (let i = 0; i < local.length; i++) {
@@ -318,9 +318,11 @@ const verDiscoCodigoUnico = () => {
        <button onclick="verDiscoCodigoUnico();">Buscar disco especifico</button>`;
 
   do {
-    codigoUnico = parseInt(prompt("Ingresa el codigo numérico único del disco"));
-    /* POR ALGUNA RAZON JAJA NO PUEDO CHEQUEAR SI ESE CODIGO UNICO EXISTE asi volver a preguntar que escriba el codigo */
-  } while (isNaN(codigoUnico));
+    codigoUnico = parseInt(prompt("Ingresa el codigo numérico único del disco que quieres ver (1-999)"));
+  } while (!(codigoUnico >= 1 && codigoUnico <= 999));
+
+  let p = document.createElement("p");
+  main.appendChild(p);
 
   /* Para que al presionarse no vuelvan a hacer el pedido de mostrar de nuevo los discos */
   let buttonMostrar = document.querySelector("button[onclick='Mostrar();']");
@@ -387,14 +389,24 @@ const verDiscoCodigoUnico = () => {
           <button onclick="EliminarPista(${i}, ${j});">X</button></li></ul></li>`;
         }
         ul.innerHTML = ulData;
+        /* Chequear Para que no figure el parrafo cuando el codigoUnico ingresado existe */
+        p = document.createElement("p");
+        p.innerHTML = "";
+      } else {
+        var check = false;
       }
     }
   } else {
     // Doy un mensaje de que no hay discos si es que el usuario ejecuta la funcion y no hay discos cargados
-    let p = document.createElement("p");
-    main.appendChild(p);
     p.innerHTML = "No se ha encontrado ningun disco";
   }
+
+  if (!check) {
+    // Doy un mensaje de que no hay discos si es que el usuario ejecuta la funcion y el codigo no coincide con ninguno codigo guardado
+    p.innerHTML = "No se ha encontrado ningun disco";
+    buttonOcultar.style.display = "none";
+  }
+
 };
 
 function alertPersonalizado(mensaje, altura, ancho) {
