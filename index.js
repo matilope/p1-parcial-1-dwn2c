@@ -95,11 +95,13 @@ const Cargar = () => {
   discos = [];
 
   Mostrar();
+
+  alertPersonalizado("Se ha creado el disco correctamente..");
 };
 
 // Función Mostrar:
 const Mostrar = () => {
-  /* Reseteo el main para cuando llamo a la funcion Mostrar se me muestre la data actualizada, entonces barro con la data y luego se pone la data actualizada del local cada vez que se ejecuta la funcion */
+  /* Reseteo el main para cuando llamo a la funcion Mostrar se me muestre la data actualizada, entonces borro la data y luego se pone la data actualizada del local cada vez que se ejecuta la funcion */
   main.innerHTML = `<header><h1>Programación I | Parcial 1 | LÓPEZ MUÑOZ, MATÍAS GABRIEL</h1></header>
   <button onClick="Cargar();">Cargar nuevo disco</button>
   <button onClick="Mostrar();">Mostrar discos ingresados</button>
@@ -206,6 +208,7 @@ const Editar = (index) => {
   local = JSON.parse(localStorage.getItem("discos")).sort((a, b) => {
     return b.codigoUnico - a.codigoUnico;
   });
+
   let edicion;
 
   /* Compruebo que el indice existe, si no existe devuelta -1, por eso pregunto si es mayor y ahi saco el elemento (ese solo) de ese index y lo guardo en una variable para poder editarlo */
@@ -257,6 +260,8 @@ const Editar = (index) => {
 
   /* Cargo la data actualizada */
   Mostrar();
+
+  alertPersonalizado("Se ha editado correctamente..");
 };
 
 const Eliminar = (index) => {
@@ -274,20 +279,23 @@ const Eliminar = (index) => {
 
   /* Cargo la data actualizada */
   Mostrar();
+
+  alertPersonalizado("Se ha eliminado el disco correctamente.");
 };
 
 const EliminarDiscosCompleto = () => {
   /* Compruebo si existe el array de discos en el localstorage */
+  
   if (localStorage.getItem("discos")) {
     /* Si existe, lo elimino completamente */
     localStorage.removeItem("discos");
-    alert("Se ha eliminado los discos");
+    alertPersonalizado("Se han eliminado los discos correctamente.");
 
     /* Cargo la data actualizada */
     Mostrar();
   } else {
     /* Si no existe doy un alerta */
-    alert("Los discos no se han encontrado");
+    alertPersonalizado("Los discos no se han encontrado.");
   }
 };
 
@@ -296,13 +304,15 @@ const EliminarPista = (indexLocal, indexPistas) => {
   local = JSON.parse(localStorage.getItem("discos")).sort((a, b) => {
     return b.codigoUnico - a.codigoUnico;
   });
-
+  
   local[indexLocal].pistas.splice(indexPistas, 1);
 
   localStorage.setItem("discos", JSON.stringify(local));
 
   /* Cargo la data actualizada */
   Mostrar();
+
+  alertPersonalizado("Se ha eliminado la pista correctamente.");
 };
 
 const VerMasInformacion = (index) => {
@@ -315,11 +325,15 @@ const VerMasInformacion = (index) => {
   let duracionTotal = null;
   let cantidadPistas = dataExtra.length;
   let mayorDuracion = Number.NEGATIVE_INFINITY;
+  let pistaMayorDuracion;
 
   for (let i = 0; i < dataExtra.length; i++) {
     duracionTotal += dataExtra[i].duracion;
     if (dataExtra[i].duracion > mayorDuracion) {
       mayorDuracion = dataExtra[i].duracion;
+      if(dataExtra[i].duracion===mayorDuracion){
+         pistaMayorDuracion= dataExtra[i].pista;
+      }
     }
   }
 
@@ -327,28 +341,16 @@ const VerMasInformacion = (index) => {
     (duracionTotal / cantidadPistas).toFixed(1)
   );
 
-  alert(
-    `${cantidadPistas}, ${duracionTotal}, ${promedioDuracion}, ${mayorDuracion}`
-  );
+  alertPersonalizado(`Cantidad de pistas: ${cantidadPistas}<br /> Duracion total de las pistas: ${duracionTotal} segundos<br /> Promedio de las pistas: ${promedioDuracion} segundos<br />  Pista con mayor duracion: ${pistaMayorDuracion}, ${mayorDuracion} segundos`, '200', '400');
 
-  return {
-    cantidadPistas: cantidadPistas,
-    duracionTotal: duracionTotal,
-    promedioDuracion: promedioDuracion,
-    mayorDuracion: mayorDuracion,
-  };
 };
 
-function alertPersonalizado() {
-  /* Creo un alert personalizado para darle una buena interfaz a la página */
-  let div = document.createElement("div");
-}
-
 const verDiscoCodigoUnico = () => {
+  /* Reseteo el main para cuando llamo a la funcion se me muestre la data actualizada, entonces borro la data y luego se pone la data actualizada del local */
   main.innerHTML = `<header><h1>Programación I | Parcial 1 | LÓPEZ MUÑOZ, MATÍAS GABRIEL</h1></header>
-  <button onClick="Cargar();">Cargar nuevo disco</button>
-  <button onClick="Mostrar();">Mostrar discos ingresados</button>
-  <button onclick="verDiscoCodigoUnico();">Buscar disco especifico</button>`;
+       <button onClick="Cargar();">Cargar nuevo disco</button>
+       <button onClick="Mostrar();">Mostrar discos ingresados</button>
+       <button onclick="verDiscoCodigoUnico();">Buscar disco especifico</button>`;
 
   /* Obtengo la data de localstorage */
   local = JSON.parse(localStorage.getItem("discos")).sort((a, b) => {
@@ -359,12 +361,9 @@ const verDiscoCodigoUnico = () => {
     codigoUnico = parseInt(
       prompt("Ingresa el codigo numérico único del disco")
     );
-    for (let i = 0; i < local.length; i++) {
-      if(local[i].codigoUnico !== codigoUnico) {
-        /* Intentando ver si existe el codigo ingresado */
-      }
-    }
+    /* POR ALGUNA RAZON JAJA NO PUEDO CHEQUEAR SI ESE CODIGO UNICO EXISTE asi volver a preguntar que escriba el codigo */
   } while (isNaN(codigoUnico));
+
 
   /* Para que al presionarse no vuelvan a hacer el pedido de mostrar de nuevo los discos */
   let buttonMostrar = document.querySelector("button[onclick='Mostrar();']");
@@ -452,3 +451,37 @@ const verDiscoCodigoUnico = () => {
     p.innerHTML = "No se ha encontrado ningun disco";
   }
 };
+
+function alertPersonalizado(mensaje, altura, ancho) {
+
+  /* Scroleo al top que es donde aparece la alerta */
+  window.scrollTo({
+    top:0,
+    left:0
+  });
+
+  /* Creo un alert personalizado para darle una buena interfaz a la página */
+  let div = document.createElement("div");
+  div.classList.add("animacion");
+  let p = document.createElement("p");
+  main.appendChild(div);
+  div.appendChild(p);
+  /* Despues lo tengo que pasar a un ul */
+  p.style="color:white;";
+  p.innerHTML=mensaje;
+  if(altura&&ancho){
+    div.style.height=altura+"px";
+    div.style.width=ancho+"px";
+    let botonCerrar= document.createElement("button");
+    botonCerrar.innerHTML="X";
+    botonCerrar.classList.add("botonCerrar");
+    div.appendChild(botonCerrar);
+    botonCerrar.addEventListener('click',()=>{
+      div.style="display:none;";
+    })
+  } else {
+    setTimeout(()=>{
+     div.style="display:none;";
+     },2000);
+  }
+}
