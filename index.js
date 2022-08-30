@@ -6,16 +6,17 @@ let discos = [],
   pistas = [],
   pista,
   duracion,
-  local;
-main = document.querySelector("main");
+  local,
+  main = document.querySelector("main");
+
+if (localStorage.getItem("discos")) {
+  local = JSON.parse(localStorage.getItem("discos")).sort((a, b) => {
+    return b.codigoUnico - a.codigoUnico;
+  });
+}
 
 // Función Cargar:
 const Cargar = () => {
-  if (localStorage.getItem("discos")) {
-    local = JSON.parse(localStorage.getItem("discos")).sort((a, b) => {
-      return b.codigoUnico - a.codigoUnico;
-    });
-  }
   do {
     nombre = prompt("Ingresa el nombre del disco");
   } while (!isNaN(nombre));
@@ -25,33 +26,19 @@ const Cargar = () => {
   } while (!isNaN(autor));
 
   do {
-    codigoUnico = parseInt(
-      prompt("Ingresa el codigo numérico único del disco")
-    );
+    codigoUnico = parseInt(prompt("Ingresa el codigo numérico único del disco"));
     if (local) {
       for (let i = 0; i < local.length; i++) {
         while (local[i].codigoUnico == codigoUnico) {
-          codigoUnico = parseInt(
-            prompt(
-              "Codigo duplicado, por favor recuerdo que el codigo de cada disco debe ser único"
-            )
-          );
+          codigoUnico = parseInt(prompt("Codigo duplicado, por favor recuerdo que el codigo de cada disco debe ser único"));
         }
         while (!(codigoUnico >= 1 && codigoUnico <= 999)) {
-          codigoUnico = parseInt(
-            prompt(
-              "Ingresa el codigo unico del disco y recuerda que tiene que ser entre 1 y 999 inclusive"
-            )
-          );
+          codigoUnico = parseInt(prompt("Ingresa el codigo unico del disco y recuerda que tiene que ser entre 1 y 999 inclusive"));
         }
       }
     } else {
       while (!(codigoUnico >= 1 && codigoUnico <= 999)) {
-        codigoUnico = parseInt(
-          prompt(
-            "Ingresa el codigo unico del disco y recuerda que tiene que ser entre 1 y 999 inclusive"
-          )
-        );
+        codigoUnico = parseInt(prompt("Ingresa el codigo unico del disco y recuerda que tiene que ser entre 1 y 999 inclusive"));
       }
     }
   } while (isNaN(codigoUnico));
@@ -64,15 +51,14 @@ const Cargar = () => {
     do {
       duracion = parseInt(prompt("Ingrese la duracion de la pista"));
       while (!(duracion >= 0 && duracion <= 7200)) {
-        duracion = parseInt(
-          prompt(
-            "Ingrese la duracion de la pista, recuerde que la duracion de la pista no puede ser menor a 0 ni mayor a 7200 segundos."
-          )
-        );
+        duracion = parseInt(prompt("Ingrese la duracion de la pista, recuerde que la duracion de la pista no puede ser menor a 0 ni mayor a 7200 segundos."));
       }
     } while (isNaN(duracion));
 
-    pistas.push({ pista: pista, duracion: duracion });
+    pistas.push({
+      pista: pista,
+      duracion: duracion,
+    });
   } while (confirm("¿Quieres ingresar otra pista?"));
 
   discos.push({
@@ -107,6 +93,12 @@ const Mostrar = () => {
   <button onClick="Mostrar();">Mostrar discos ingresados</button>
   <button onclick="verDiscoCodigoUnico();">Buscar disco especifico</button>`;
 
+  if (localStorage.getItem("discos")) {
+    local = JSON.parse(localStorage.getItem("discos")).sort((a, b) => {
+      return b.codigoUnico - a.codigoUnico;
+    });
+  }
+
   /* Para que al presionarse no vuelvan a hacer el pedido de mostrar de nuevo los discos */
   let buttonMostrar = document.querySelector("button[onclick='Mostrar();']");
   buttonMostrar.style.display = "none";
@@ -128,13 +120,6 @@ const Mostrar = () => {
   /* Variables que uso para el evento de ocultar */
   let section;
   let eliminarTotal;
-
-  /* Obteniendo la data de localstorage y cuando me deje la data los ubico en forma descendiente dependiendo de el codigo unico ingresado */
-  if (localStorage.getItem("discos")) {
-    local = JSON.parse(localStorage.getItem("discos")).sort((a, b) => {
-      return b.codigoUnico - a.codigoUnico;
-    });
-  }
 
   /* Compruebo si local existe y si no es un array vacio porque si borro todos los objetos dentro del array uno por uno, queda el array vacio y necesito validar eso para mostrar el mensaje que se muestra en el else */
   if (local && local.length > 0) {
@@ -204,11 +189,6 @@ const Mostrar = () => {
 };
 
 const Editar = (index) => {
-  /* Obtengo la data de localstorage */
-  local = JSON.parse(localStorage.getItem("discos")).sort((a, b) => {
-    return b.codigoUnico - a.codigoUnico;
-  });
-
   let edicion;
 
   /* Compruebo que el indice existe, si no existe devuelta -1, por eso pregunto si es mayor y ahi saco el elemento (ese solo) de ese index y lo guardo en una variable para poder editarlo */
@@ -241,16 +221,15 @@ const Editar = (index) => {
       do {
         duracion = parseInt(prompt("Ingrese la duracion de la pista"));
         while (!(duracion >= 0 && duracion <= 7200)) {
-          duracion = parseInt(
-            prompt(
-              "Ingrese la duracion de la pista, recuerde que la duracion de la pista no puede ser menor a 0 ni mayor a 7200 segundos."
-            )
-          );
+          duracion = parseInt(prompt("Ingrese la duracion de la pista, recuerde que la duracion de la pista no puede ser menor a 0 ni mayor a 7200 segundos."));
         }
       } while (isNaN(duracion));
 
       /* Guardo las pistas y las mando al array pistas */
-      edicion[0].pistas.push({ pista: pista, duracion: duracion });
+      edicion[0].pistas.push({
+        pista: pista,
+        duracion: duracion,
+      });
     } while (confirm("¿Quieres ingresar otra pista?"));
   }
 
@@ -265,11 +244,6 @@ const Editar = (index) => {
 };
 
 const Eliminar = (index) => {
-  /* Traigo los discos */
-  local = JSON.parse(localStorage.getItem("discos")).sort((a, b) => {
-    return b.codigoUnico - a.codigoUnico;
-  });
-
   /* Compruebo que el indice existe, si no existe devuelta -1, por eso pregunto si es mayor y ahi saco el elemento (ese solo) de ese index. */
   if (index > -1) {
     local.splice(index, 1);
@@ -285,7 +259,7 @@ const Eliminar = (index) => {
 
 const EliminarDiscosCompleto = () => {
   /* Compruebo si existe el array de discos en el localstorage */
-  
+
   if (localStorage.getItem("discos")) {
     /* Si existe, lo elimino completamente */
     localStorage.removeItem("discos");
@@ -300,11 +274,6 @@ const EliminarDiscosCompleto = () => {
 };
 
 const EliminarPista = (indexLocal, indexPistas) => {
-  /* Traigo los discos */
-  local = JSON.parse(localStorage.getItem("discos")).sort((a, b) => {
-    return b.codigoUnico - a.codigoUnico;
-  });
-  
   local[indexLocal].pistas.splice(indexPistas, 1);
 
   localStorage.setItem("discos", JSON.stringify(local));
@@ -316,11 +285,6 @@ const EliminarPista = (indexLocal, indexPistas) => {
 };
 
 const VerMasInformacion = (index) => {
-  /* Obtengo la data de localstorage */
-  local = JSON.parse(localStorage.getItem("discos")).sort((a, b) => {
-    return b.codigoUnico - a.codigoUnico;
-  });
-
   let dataExtra = local[index].pistas;
   let duracionTotal = null;
   let cantidadPistas = dataExtra.length;
@@ -331,18 +295,22 @@ const VerMasInformacion = (index) => {
     duracionTotal += dataExtra[i].duracion;
     if (dataExtra[i].duracion > mayorDuracion) {
       mayorDuracion = dataExtra[i].duracion;
-      if(dataExtra[i].duracion===mayorDuracion){
-         pistaMayorDuracion= dataExtra[i].pista;
+      if (dataExtra[i].duracion === mayorDuracion) {
+        pistaMayorDuracion = dataExtra[i].pista;
       }
     }
   }
 
-  let promedioDuracion = parseFloat(
-    (duracionTotal / cantidadPistas).toFixed(1)
+  let promedioDuracion = parseFloat((duracionTotal / cantidadPistas).toFixed(1));
+
+  alertPersonalizado(
+    `Cantidad de pistas: ${cantidadPistas}<br />
+    Duracion total de las pistas: ${duracionTotal} segundos<br />
+    Promedio de las pistas: ${promedioDuracion} segundos<br />
+    Pista con mayor duracion: ${pistaMayorDuracion}, ${mayorDuracion} segundos`,
+    "200",
+    "400"
   );
-
-  alertPersonalizado(`Cantidad de pistas: ${cantidadPistas}<br /> Duracion total de las pistas: ${duracionTotal} segundos<br /> Promedio de las pistas: ${promedioDuracion} segundos<br />  Pista con mayor duracion: ${pistaMayorDuracion}, ${mayorDuracion} segundos`, '200', '400');
-
 };
 
 const verDiscoCodigoUnico = () => {
@@ -352,18 +320,10 @@ const verDiscoCodigoUnico = () => {
        <button onClick="Mostrar();">Mostrar discos ingresados</button>
        <button onclick="verDiscoCodigoUnico();">Buscar disco especifico</button>`;
 
-  /* Obtengo la data de localstorage */
-  local = JSON.parse(localStorage.getItem("discos")).sort((a, b) => {
-    return b.codigoUnico - a.codigoUnico;
-  });
-
   do {
-    codigoUnico = parseInt(
-      prompt("Ingresa el codigo numérico único del disco")
-    );
+    codigoUnico = parseInt(prompt("Ingresa el codigo numérico único del disco"));
     /* POR ALGUNA RAZON JAJA NO PUEDO CHEQUEAR SI ESE CODIGO UNICO EXISTE asi volver a preguntar que escriba el codigo */
   } while (isNaN(codigoUnico));
-
 
   /* Para que al presionarse no vuelvan a hacer el pedido de mostrar de nuevo los discos */
   let buttonMostrar = document.querySelector("button[onclick='Mostrar();']");
@@ -381,12 +341,6 @@ const verDiscoCodigoUnico = () => {
       buttonMostrar.style.display = "none";
     }
   });
-
-  if (localStorage.getItem("discos")) {
-    local = JSON.parse(localStorage.getItem("discos")).sort((a, b) => {
-      return b.codigoUnico - a.codigoUnico;
-    });
-  }
 
   /* Compruebo si local existe y si no es un array vacio porque si borro todos los objetos dentro del array uno por uno, queda el array vacio y necesito validar eso para mostrar el mensaje que se muestra en el else */
   if (local && local.length > 0) {
@@ -453,11 +407,10 @@ const verDiscoCodigoUnico = () => {
 };
 
 function alertPersonalizado(mensaje, altura, ancho) {
-
   /* Scroleo al top que es donde aparece la alerta */
   window.scrollTo({
-    top:0,
-    left:0
+    top: 0,
+    left: 0,
   });
 
   /* Creo un alert personalizado para darle una buena interfaz a la página */
@@ -467,21 +420,22 @@ function alertPersonalizado(mensaje, altura, ancho) {
   main.appendChild(div);
   div.appendChild(p);
   /* Despues lo tengo que pasar a un ul */
-  p.style="color:white;";
-  p.innerHTML=mensaje;
-  if(altura&&ancho){
-    div.style.height=altura+"px";
-    div.style.width=ancho+"px";
-    let botonCerrar= document.createElement("button");
-    botonCerrar.innerHTML="X";
+  p.style = "color:white;";
+  p.innerHTML = mensaje;
+  if (altura && ancho) {
+    div.style.height = altura + "px";
+    div.style.width = ancho + "px";
+    let botonCerrar = document.createElement("button");
+    botonCerrar.innerHTML = "X";
     botonCerrar.classList.add("botonCerrar");
     div.appendChild(botonCerrar);
-    botonCerrar.addEventListener('click',()=>{
-      div.style="display:none;";
-    })
+    botonCerrar.addEventListener("click", () => {
+      div.style = "display:none;";
+    });
   } else {
-    setTimeout(()=>{
-     div.style="display:none;";
-     },2000);
+    setTimeout(() => {
+      div.style = "display:none;";
+    }, 2000);
   }
+
 }
