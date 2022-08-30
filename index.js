@@ -27,18 +27,14 @@ const Cargar = () => {
 
   do {
     codigoUnico = parseInt(prompt("Ingresa el codigo numérico único del disco"));
+    while (!(codigoUnico >= 1 && codigoUnico <= 999)) {
+      codigoUnico = parseInt(prompt("Ingresa el codigo unico del disco y recuerda que tiene que ser entre 1 y 999 inclusive"));
+    }
     if (local) {
       for (let i = 0; i < local.length; i++) {
         while (local[i].codigoUnico == codigoUnico) {
           codigoUnico = parseInt(prompt("Codigo duplicado, por favor recuerdo que el codigo de cada disco debe ser único"));
         }
-        while (!(codigoUnico >= 1 && codigoUnico <= 999)) {
-          codigoUnico = parseInt(prompt("Ingresa el codigo unico del disco y recuerda que tiene que ser entre 1 y 999 inclusive"));
-        }
-      }
-    } else {
-      while (!(codigoUnico >= 1 && codigoUnico <= 999)) {
-        codigoUnico = parseInt(prompt("Ingresa el codigo unico del disco y recuerda que tiene que ser entre 1 y 999 inclusive"));
       }
     }
   } while (isNaN(codigoUnico));
@@ -198,10 +194,7 @@ const Editar = (index) => {
 
   /* Edito en caso de querer, los nuevos datos, aparte el prompt lo relleno con los datos anteriores para una mejor guia al usuario */
   do {
-    edicion[0].nombre = prompt(
-      "Ingresa el nombre del disco",
-      edicion[0].nombre
-    );
+    edicion[0].nombre = prompt("Ingresa el nombre del disco", edicion[0].nombre);
   } while (!isNaN(edicion[0].nombre));
 
   do {
@@ -211,8 +204,6 @@ const Editar = (index) => {
   /* Si confirma, le borro toda las pistas para que despues pueda volver a ingresar las nuevas */
 
   if (confirm("¿Quieres agregar mas pistas?")) {
-    /* Vacio las pistas */
-
     do {
       do {
         pista = prompt("Ingresa el nombre de la pista");
@@ -248,8 +239,14 @@ const Eliminar = (index) => {
   if (index > -1) {
     local.splice(index, 1);
   }
+
   /* Luego con ese item eliminado mando al localstorage el string con toda la data de los discos, excepto el que se pidio eliminar */
-  localStorage.setItem("discos", JSON.stringify(local));
+  /* Tambien compruebo, que si elimina el ultimo que elimine el localStorage completo */
+  if (local.length > 0) {
+    localStorage.setItem("discos", JSON.stringify(local));
+  } else {
+    localStorage.removeItem("discos");
+  }
 
   /* Cargo la data actualizada */
   Mostrar();
@@ -304,10 +301,10 @@ const VerMasInformacion = (index) => {
   let promedioDuracion = parseFloat((duracionTotal / cantidadPistas).toFixed(1));
 
   alertPersonalizado(
-    `Cantidad de pistas: ${cantidadPistas}<br />
-    Duracion total de las pistas: ${duracionTotal} segundos<br />
-    Promedio de las pistas: ${promedioDuracion} segundos<br />
-    Pista con mayor duracion: ${pistaMayorDuracion}, ${mayorDuracion} segundos`,
+    `<li>Cantidad de pistas: ${cantidadPistas}</li>
+    <li>Duracion total de las pistas: ${duracionTotal} segundos</li>
+    <li>Promedio de las pistas: ${promedioDuracion} segundos</li>
+    <li>Pista con mayor duracion: ${pistaMayorDuracion}, ${mayorDuracion} segundos</li>`,
     "200",
     "400"
   );
@@ -385,15 +382,9 @@ const verDiscoCodigoUnico = () => {
         h3.textContent = local[i].nombre;
         let ulData = `<li>Autor: ${local[i].autor}</li><li>Codigo unico: ${local[i].codigoUnico}</li><li>Pistas (total ${local[i].pistas.length}): `;
         for (let j = 0; j < local[i].pistas.length; j++) {
-          ulData += `<ul><li>Nombre de pista: ${
-            local[i].pistas[j].pista
-          }</li><li>Duracion de la pista: <span class="${
-            local[i].pistas[j].duracion > 180
-              ? "duracionMayor"
-              : "duracionMenor"
-          }">${
-            local[i].pistas[j].duracion
-          }</span><button onclick="EliminarPista(${i}, ${j});">X</button></li></ul></li>`;
+          ulData += `<ul><li>Nombre de pista: ${local[i].pistas[j].pista}</li>
+          <li>Duracion de la pista: <span class="${local[i].pistas[j].duracion > 180 ? "duracionMayor" : "duracionMenor"}">${local[i].pistas[j].duracion}</span>
+          <button onclick="EliminarPista(${i}, ${j});">X</button></li></ul></li>`;
         }
         ul.innerHTML = ulData;
       }
@@ -416,15 +407,13 @@ function alertPersonalizado(mensaje, altura, ancho) {
   /* Creo un alert personalizado para darle una buena interfaz a la página */
   let div = document.createElement("div");
   div.classList.add("animacion");
-  let p = document.createElement("p");
   main.appendChild(div);
-  div.appendChild(p);
-  /* Despues lo tengo que pasar a un ul */
-  p.style = "color:white;";
-  p.innerHTML = mensaje;
   if (altura && ancho) {
     div.style.height = altura + "px";
     div.style.width = ancho + "px";
+    let ul = document.createElement("ul");
+    ul.innerHTML = mensaje;
+    div.appendChild(ul);
     let botonCerrar = document.createElement("button");
     botonCerrar.innerHTML = "X";
     botonCerrar.classList.add("botonCerrar");
@@ -433,6 +422,10 @@ function alertPersonalizado(mensaje, altura, ancho) {
       div.style = "display:none;";
     });
   } else {
+    let p = document.createElement("p");
+    div.appendChild(p);
+    p.style = "color:white;";
+    p.innerHTML = mensaje;
     setTimeout(() => {
       div.style = "display:none;";
     }, 2000);
