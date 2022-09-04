@@ -15,69 +15,6 @@ if (localStorage.getItem("discos")) {
   });
 }
 
-// Función Cargar:
-const Cargar = () => {
-  do {
-    nombre = prompt("Ingresa el nombre del disco");
-  } while (!isNaN(nombre));
-
-  do {
-    autor = prompt("Ingresa el autor del disco");
-  } while (!isNaN(autor));
-
-  do {
-    codigoUnico = parseInt(prompt("Ingresa el codigo numérico único del disco (1-999)"));
-    if (local) {
-      for (let i = 0; i < local.length; i++) {
-        while (local[i].codigoUnico == codigoUnico) {
-          codigoUnico = parseInt(prompt("Codigo duplicado, por favor recuerdo que el codigo de cada disco debe ser único"));
-        }
-      }
-    }
-  } while (!(codigoUnico >= 1 && codigoUnico <= 999));
-
-  do {
-    do {
-      pista = prompt("Ingresa el nombre de la pista");
-    } while (!isNaN(pista));
-
-    do {
-      duracion = parseInt(prompt("Ingrese la duracion de la pista"));
-      while (!(duracion >= 0 && duracion <= 7200)) {
-        duracion = parseInt(prompt("Ingrese la duracion de la pista, recuerde que la duracion de la pista no puede ser menor a 0 ni mayor a 7200 segundos."));
-      }
-    } while (isNaN(duracion));
-
-    pistas.push({
-      pista: pista,
-      duracion: duracion,
-    });
-  } while (confirm("¿Quieres ingresar otra pista?"));
-
-  discos.push({
-    nombre: nombre,
-    autor: autor,
-    codigoUnico: codigoUnico,
-    pistas: pistas,
-  });
-
-  /* Compruebo si local esta y si esta, pusheo solo el objeto de discos, si no esta pusheo el array y el objeto para que se guarde un array de objetos */
-  if (local) {
-    local.push(discos[0]);
-    localStorage.setItem("discos", JSON.stringify(local));
-  } else {
-    localStorage.setItem("discos", JSON.stringify(discos));
-  }
-
-  /* Vacio los valores para que al publicar no se vuelvan a poner los valores cargados anteriormente */
-  pistas = [];
-  discos = [];
-
-  Mostrar();
-
-  alertPersonalizado("Se ha creado el disco correctamente..");
-};
-
 // Función Mostrar:
 const Mostrar = (index) => {
   /* Reseteo el main para cuando llamo a la funcion Mostrar se me muestre la data actualizada, entonces borro la data y luego se pone la data actualizada del local cada vez que se ejecuta la funcion */
@@ -215,6 +152,69 @@ const Mostrar = (index) => {
     main.appendChild(p);
     p.innerHTML = "No se ha encontrado ningun disco";
   }
+};
+
+// Función Cargar:
+const Cargar = () => {
+  do {
+    nombre = prompt("Ingresa el nombre del disco");
+  } while (!isNaN(nombre));
+
+  do {
+    autor = prompt("Ingresa el autor del disco");
+  } while (!isNaN(autor));
+
+  do {
+    codigoUnico = parseInt(prompt("Ingresa el codigo numérico único del disco (1-999)"));
+    if (local) {
+      for (let i = 0; i < local.length; i++) {
+        while (local[i].codigoUnico == codigoUnico) {
+          codigoUnico = parseInt(prompt("Codigo duplicado, por favor recuerdo que el codigo de cada disco debe ser único"));
+        }
+      }
+    }
+  } while (!(codigoUnico >= 1 && codigoUnico <= 999));
+
+  do {
+    do {
+      pista = prompt("Ingresa el nombre de la pista");
+    } while (!isNaN(pista));
+
+    do {
+      duracion = parseInt(prompt("Ingrese la duracion de la pista"));
+      while (!(duracion >= 0 && duracion <= 7200)) {
+        duracion = parseInt(prompt("Ingrese la duracion de la pista, recuerde que la duracion de la pista no puede ser menor a 0 ni mayor a 7200 segundos."));
+      }
+    } while (isNaN(duracion));
+
+    pistas.push({
+      pista: pista,
+      duracion: duracion,
+    });
+  } while (confirm("¿Quieres ingresar otra pista?"));
+
+  discos.push({
+    nombre: nombre,
+    autor: autor,
+    codigoUnico: codigoUnico,
+    pistas: pistas,
+  });
+
+  /* Compruebo si local esta y si esta, pusheo solo el objeto de discos, si no esta pusheo el array y el objeto para que se guarde un array de objetos */
+  if (local) {
+    local.push(discos[0]);
+    localStorage.setItem("discos", JSON.stringify(local));
+  } else {
+    localStorage.setItem("discos", JSON.stringify(discos));
+  }
+
+  /* Vacio los valores para que al publicar no se vuelvan a poner los valores cargados anteriormente */
+  pistas = [];
+  discos = [];
+
+  Mostrar();
+
+  alertPersonalizado("Se ha creado el disco correctamente..");
 };
 
 // Función Editar:
