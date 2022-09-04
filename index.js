@@ -79,7 +79,7 @@ const Cargar = () => {
 };
 
 // Función Mostrar:
-const Mostrar = () => {
+const Mostrar = (index) => {
   /* Reseteo el main para cuando llamo a la funcion Mostrar se me muestre la data actualizada, entonces borro la data y luego se pone la data actualizada del local cada vez que se ejecuta la funcion */
   main.innerHTML = `<header><h1>Programación I | Parcial 1 | LÓPEZ MUÑOZ, MATÍAS GABRIEL</h1></header>
   <button onClick="Cargar();">Cargar nuevo disco</button>
@@ -124,58 +124,91 @@ const Mostrar = () => {
     h2.textContent = "Discos ingresados";
 
     /* informar cantidad de discos ingresados */
-    alertPersonalizado("Discos ingresados: " + local.length);
+    if (!index) {
+      /* Si no esta el index no hace falta que me diga la cantidad de discos */
+      alertPersonalizado("Discos ingresados: " + local.length);
+
+      /* Creo un solo elemento para permitir eliminar todos los discos subidos y lo anexo al main en caso tambien de no existir el indice, cuando quiero buscar un solo disco, no hace falta que esta opcion aparezca */
+      eliminarTotal = document.createElement("button");
+      eliminarTotal.setAttribute("onclick", `EliminarDiscosCompleto();`);
+      eliminarTotal.innerHTML = "Eliminar discografia completa";
+      main.appendChild(eliminarTotal);
+    } else {
+      /* Si esta el index, de paso aprovecho este else para ordenar distinto el local y me deje acceder al codigo unico que quiero realmente y no que me los agarre al reves, ya que tengo invertida la posicion de los objetos dentro del array */
+      /* Asi que aprovecho y lo invierto en este caso el local */
+      local = JSON.parse(localStorage.getItem("discos")).sort((a, b) => {
+        return a.codigoUnico - b.codigoUnico;
+      });
+    }
+
 
     /* Recorriendo el array de objetos de localstorage */
     for (let i = 0; i < local.length; i++) {
-      /* Creando elementos */
-      let div = document.createElement("div");
-      let h3 = document.createElement("h3");
-      let ul = document.createElement("ul");
-      let editar = document.createElement("button");
-      let eliminar = document.createElement("button");
-      let verInformacion = document.createElement("button");
-      let img = document.createElement("img");
 
-      /* Seteando la informacion en los atributos y nombre de los botones */
-      img.src = "./discos.webp";
-      img.alt = "Imagen representativa de Discos";
-      editar.setAttribute("onclick", `Editar(${i});`);
-      eliminar.setAttribute("onclick", `Eliminar(${i});`);
-      verInformacion.setAttribute("onclick", `VerMasInformacion(${i});`);
-      editar.innerHTML = "Editar";
-      eliminar.innerHTML = "Eliminar";
-      verInformacion.innerHTML = "Ver mas informacion";
 
-      /* Anexo elementos creados */
-      section.appendChild(div);
-      div.appendChild(img);
-      div.appendChild(h3);
-      div.appendChild(ul);
-      div.appendChild(editar);
-      div.appendChild(eliminar);
-      div.appendChild(verInformacion);
-
-      /* Unorder list con la data */
-      h3.textContent = local[i].nombre;
-      let ulData = `<li>Autor: ${local[i].autor}</li><li>Codigo unico: ${local[i].codigoUnico}</li><li>Pistas (total ${local[i].pistas.length}): `;
-      for (let j = 0; j < local[i].pistas.length; j++) {
-        ulData += `<ul><li>Nombre de pista: ${
-          local[i].pistas[j].pista
-        }</li><li>Duracion de la pista: <span class="${
-          local[i].pistas[j].duracion > 180 ? "duracionMayor" : "duracionMenor"
-        }">${
-          local[i].pistas[j].duracion
-        }</span><button onclick="EliminarPista(${i}, ${j});">X</button></li></ul></li>`;
+      /*Si esta el index al i lo igual al index - 1 (ya que el codigo unico arranca de 1 a 999) pero el indice del primer objeto dentro del array es 0 entonces, si quiero ver el primer disco, veo el del indice 0 de esta forma */
+      if (index) {
+        i = index - 1;
       }
-      ul.innerHTML = ulData;
+
+      if (index && !local[index - 1]) {
+        alertPersonalizado("Disco solicitado no existe");
+        main.innerHTML = `<header><h1>Programación I | Parcial 1 | LÓPEZ MUÑOZ, MATÍAS GABRIEL</h1></header>
+        <button onClick="Cargar();">Cargar nuevo disco</button>
+        <button onClick="Mostrar();">Mostrar discos ingresados</button>
+        <button onclick="verDiscoCodigoUnico();">Buscar disco especifico</button>`;
+        let p = document.createElement("p");
+        main.appendChild(p);
+        p.innerHTML = "No se ha encontrado ningun disco";
+      } else {
+
+        /* Creando elementos */
+        let div = document.createElement("div");
+        let h3 = document.createElement("h3");
+        let ul = document.createElement("ul");
+        let editar = document.createElement("button");
+        let eliminar = document.createElement("button");
+        let verInformacion = document.createElement("button");
+        let img = document.createElement("img");
+
+        /* Seteando la informacion en los atributos y nombre de los botones */
+        img.src = "./discos.webp";
+        img.alt = "Imagen representativa de Discos";
+        editar.setAttribute("onclick", `Editar(${i});`);
+        eliminar.setAttribute("onclick", `Eliminar(${i});`);
+        verInformacion.setAttribute("onclick", `VerMasInformacion(${i});`);
+        editar.innerHTML = "Editar";
+        eliminar.innerHTML = "Eliminar";
+        verInformacion.innerHTML = "Ver mas informacion";
+
+        /* Anexo elementos creados */
+        section.appendChild(div);
+        div.appendChild(img);
+        div.appendChild(h3);
+        div.appendChild(ul);
+        div.appendChild(editar);
+        div.appendChild(eliminar);
+        div.appendChild(verInformacion);
+
+        /* Unorder list con la data */
+        h3.textContent = local[i].nombre;
+        let ulData = `<li>Autor: ${local[i].autor}</li><li>Codigo unico: ${local[i].codigoUnico}</li><li>Pistas (total ${local[i].pistas.length}): <ul>`;
+        for (let j = 0; j < local[i].pistas.length; j++) {
+          ulData += `<li>Nombre de pista: ${local[i].pistas[j].pista}</li><li>Duracion de la pista: 
+        <span class="${local[i].pistas[j].duracion > 180 ? "duracionMayor" : "duracionMenor"}">${local[i].pistas[j].duracion}</span>
+        <button onclick="EliminarPista(${i}, ${j});">X</button></li>`;
+        }
+        ulData += "</ul></li>";
+        ul.innerHTML = ulData;
+
+        /* i ya es igual al indice porque lo igual arriba si es que el indice existe. ademas utilizo el break para que no se sigue ejecutando el bucle y me devuelva solo el codigo del que pido en caso de ser necesario*/
+        if (i == index - 1) {
+          break;
+        }
+
+      }
     }
 
-    /* Creo un solo elemento para permitir eliminar todos los discos subidos y lo anexo al main */
-    eliminarTotal = document.createElement("button");
-    eliminarTotal.setAttribute("onclick", `EliminarDiscosCompleto();`);
-    eliminarTotal.innerHTML = "Eliminar discografia completa";
-    main.appendChild(eliminarTotal);
   } else {
     // Doy un mensaje de que no hay discos si es que el usuario ejecuta la funcion de mostrar y no hay discos cargados
     let p = document.createElement("p");
@@ -184,6 +217,7 @@ const Mostrar = () => {
   }
 };
 
+// Función Editar:
 const Editar = (index) => {
   let edicion;
 
@@ -234,6 +268,7 @@ const Editar = (index) => {
   alertPersonalizado("Se ha editado correctamente..");
 };
 
+// Función Eliminar:
 const Eliminar = (index) => {
   /* Compruebo que el indice existe, si no existe devuelta -1, por eso pregunto si es mayor y ahi saco el elemento (ese solo) de ese index. */
   if (index > -1) {
@@ -254,6 +289,7 @@ const Eliminar = (index) => {
   alertPersonalizado("Se ha eliminado el disco correctamente.");
 };
 
+// Función Eliminar Discos Completo:
 const EliminarDiscosCompleto = () => {
   /* Compruebo si existe el array de discos en el localstorage */
 
@@ -265,11 +301,12 @@ const EliminarDiscosCompleto = () => {
     /* Cargo la data actualizada */
     Mostrar();
   } else {
-    /* Si no existe doy un alerta */
+    /* Si no existe doy un alerta aunque el boton no figura si no existen discos CHEQUEAR SI VALE LA PENA, OBVIAMENTE NO PERO BUENOOOO */
     alertPersonalizado("Los discos no se han encontrado.");
   }
 };
 
+// Función Eliminar Pista
 const EliminarPista = (indexLocal, indexPistas) => {
   local[indexLocal].pistas.splice(indexPistas, 1);
 
@@ -281,6 +318,7 @@ const EliminarPista = (indexLocal, indexPistas) => {
   alertPersonalizado("Se ha eliminado la pista correctamente.");
 };
 
+// Función Ver Mas Informacion
 const VerMasInformacion = (index) => {
   let dataExtra = local[index].pistas;
   let duracionTotal = null;
@@ -310,105 +348,18 @@ const VerMasInformacion = (index) => {
   );
 };
 
+// Función Ver Codigo Unico
 const verDiscoCodigoUnico = () => {
-  /* Reseteo el main para cuando llamo a la funcion se me muestre la data actualizada, entonces borro la data y luego se pone la data actualizada del local */
-  main.innerHTML = `<header><h1>Programación I | Parcial 1 | LÓPEZ MUÑOZ, MATÍAS GABRIEL</h1></header>
-       <button onClick="Cargar();">Cargar nuevo disco</button>
-       <button onClick="Mostrar();">Mostrar discos ingresados</button>
-       <button onclick="verDiscoCodigoUnico();">Buscar disco especifico</button>`;
-
-  do {
-    codigoUnico = parseInt(prompt("Ingresa el codigo numérico único del disco que quieres ver (1-999)"));
-  } while (!(codigoUnico >= 1 && codigoUnico <= 999));
-
-  let p = document.createElement("p");
-  main.appendChild(p);
-
-  /* Para que al presionarse no vuelvan a hacer el pedido de mostrar de nuevo los discos */
-  let buttonMostrar = document.querySelector("button[onclick='Mostrar();']");
-  buttonMostrar.style.display = "none";
-  let buttonOcultar = document.createElement("button");
-  buttonOcultar.textContent = "Ocultar discos";
-  main.appendChild(buttonOcultar);
-
-  buttonOcultar.addEventListener("click", () => {
-    buttonOcultar.style.display = "none";
-    buttonMostrar.style.display = "inline-block";
-    if (section) {
-      section.style.display = "none";
-    } else {
-      buttonMostrar.style.display = "none";
-    }
-  });
-
-  /* Compruebo si local existe y si no es un array vacio porque si borro todos los objetos dentro del array uno por uno, queda el array vacio y necesito validar eso para mostrar el mensaje que se muestra en el else */
-  if (local && local.length > 0) {
-    /* Recorriendo el array de objetos de localstorage */
-    for (let i = 0; i < local.length; i++) {
-      if (local[i].codigoUnico === codigoUnico) {
-        section = document.createElement("section");
-        main.appendChild(section);
-        section.classList.add("discosingresados");
-        let h2 = document.createElement("h2");
-        section.appendChild(h2);
-        h2.textContent = "Discos ingresados";
-        /* Creando elementos */
-        let div = document.createElement("div");
-        let h3 = document.createElement("h3");
-        let ul = document.createElement("ul");
-        let editar = document.createElement("button");
-        let eliminar = document.createElement("button");
-        let verInformacion = document.createElement("button");
-        let img = document.createElement("img");
-
-        /* Seteando la informacion en los atributos y nombre de los botones */
-        img.src = "./discos.webp";
-        img.alt = "Imagen representativa de Discos";
-        editar.setAttribute("onclick", `Editar(${i});`);
-        eliminar.setAttribute("onclick", `Eliminar(${i});`);
-        verInformacion.setAttribute("onclick", `VerMasInformacion(${i});`);
-        editar.innerHTML = "Editar";
-        eliminar.innerHTML = "Eliminar";
-        verInformacion.innerHTML = "Ver mas informacion";
-
-        /* Anexo elementos creados */
-        section.appendChild(div);
-        div.appendChild(img);
-        div.appendChild(h3);
-        div.appendChild(ul);
-        div.appendChild(editar);
-        div.appendChild(eliminar);
-        div.appendChild(verInformacion);
-
-        /* Unorder list con la data */
-        h3.textContent = local[i].nombre;
-        let ulData = `<li>Autor: ${local[i].autor}</li><li>Codigo unico: ${local[i].codigoUnico}</li><li>Pistas (total ${local[i].pistas.length}): `;
-        for (let j = 0; j < local[i].pistas.length; j++) {
-          ulData += `<ul><li>Nombre de pista: ${local[i].pistas[j].pista}</li>
-          <li>Duracion de la pista: <span class="${local[i].pistas[j].duracion > 180 ? "duracionMayor" : "duracionMenor"}">${local[i].pistas[j].duracion}</span>
-          <button onclick="EliminarPista(${i}, ${j});">X</button></li></ul></li>`;
-        }
-        ul.innerHTML = ulData;
-        /* Chequear Para que no figure el parrafo cuando el codigoUnico ingresado existe */
-        p = document.createElement("p");
-        p.innerHTML = "";
-      } else {
-        var check = false;
-      }
-    }
+  codigoUnico = parseInt(prompt("Ingresa el codigo numérico único del disco que quieres ver (1-999)"));
+  if (codigoUnico >= 1 && codigoUnico <= 999) {
+    Mostrar(codigoUnico);
   } else {
-    // Doy un mensaje de que no hay discos si es que el usuario ejecuta la funcion y no hay discos cargados
-    p.innerHTML = "No se ha encontrado ningun disco";
-  }
-
-  if (!check) {
-    // Doy un mensaje de que no hay discos si es que el usuario ejecuta la funcion y el codigo no coincide con ninguno codigo guardado
-    p.innerHTML = "No se ha encontrado ningun disco";
-    buttonOcultar.style.display = "none";
+    alertPersonalizado("El codigo no existe...");
   }
 
 };
 
+// Función Alert
 function alertPersonalizado(mensaje, altura, ancho) {
   /* Scroleo al top que es donde aparece la alerta */
   window.scrollTo({
@@ -424,6 +375,7 @@ function alertPersonalizado(mensaje, altura, ancho) {
     div.style.height = altura + "px";
     div.style.width = ancho + "px";
     let ul = document.createElement("ul");
+    ul.style.color = "white";
     ul.innerHTML = mensaje;
     div.appendChild(ul);
     let botonCerrar = document.createElement("button");
