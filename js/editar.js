@@ -8,35 +8,52 @@
 const Editar = (index) => {
     let edicion;
 
-    /* Compruebo que el indice existe, si no existe devuelta -1, por eso pregunto si es mayor y ahi saco el elemento (ese solo) de ese index y lo guardo en una variable para poder editarlo */
-    if (index > -1) {
-        edicion = local.splice(index, 1)[0];
-    }
+    edicion = local[index];
 
-    /* Variables de resguardo en caso de que el usuario no quiera editar el nombre o el autor del disco */
-    /* Ver error */
-    let nombreReservado = edicion.nombre;
-    let autorReservado = edicion.autor;
+    /* Guardo la informacion inicial del nombre y el autor */
+    let nombre = local[index].nombre;
+    let autor = local[index].autor;
 
-    /* Edito en caso de querer, los nuevos datos, aparte el prompt lo relleno con los datos anteriores para una mejor guia al usuario */
     do {
-        edicion.nombre = prompt("Ingresa el nombre del disco", edicion.nombre);
+        edicion.nombre = prompt("Ingresa el nombre del disco", nombre);
+
+        /* Le doy un mensaje personalizado en el prompt en caso de que escriba numeros tambien hago que este mensaje NO se muestre si el usuario cancela */
+        if (!isNaN(edicion.nombre) && edicion.nombre !== null) {
+            edicion.nombre = prompt("Ingresa el nombre del disco, recuerda que no puede empezar con un numero", nombre);
+        }
+
         /* Verifico si es null para permitir al usuario cancelar en caso de arrepentirse de editar esta variable */
         if (edicion.nombre === null) {
-            edicion.nombre = nombreReservado;
             /* Si el usuario cancela significa que quiere salir de la edicion, entonces termino la funcion y no se actualiza la misma */
             alertPersonalizado("La edicion se ha cancelado");
+
+            /* Como ahora edicion.nombre es null, uso la variable nombre en donde tengo el valor que estaba anteriormente y se lo vuelvo a colocar a edicion.nombre */
+            edicion.nombre = nombre;
+
+            /* Finalizo la funcion */
             return;
         }
     } while (!isNaN(edicion.nombre));
 
     do {
-        edicion.autor = prompt("Ingresa el autor del disco", edicion.autor);
+        edicion.autor = prompt("Ingresa el autor del disco", autor);
+
+        /* Le doy un mensaje personalizado en el prompt  en caso de que escriba numeros tambien hago que este mensaje NO se muestre si el usuario cancela */
+        if (!isNaN(edicion.autor) && edicion.autor !== null) {
+            edicion.autor = prompt("Ingresa el autor del disco, recuerda que no puede empezar con un numero", autor);
+        }
+
         /* Verifico si es null para permitir al usuario cancelar en caso de arrepentirse de editar esta variable */
         if (edicion.autor === null) {
-            edicion.autor = autorReservado;
             /* Si el usuario cancela significa que quiere salir de la edicion, entonces termino la funcion y no se actualiza la misma */
             alertPersonalizado("La edicion se ha cancelado");
+
+            /* Como ahora edicion.autor es null, uso la variable autor en donde tengo el valor que estaba anteriormente y se lo vuelvo a colocar a edicion.autor */
+            /* Lo mismo con nombre, tengo que guardarlo nuevamente como estaba al principio asi al editar puede volver a ver el resultado que tenia inicialmente */
+            edicion.nombre = nombre;
+            edicion.autor = autor;
+
+            /* Finalizo la funcion */
             return;
         }
     } while (!isNaN(edicion.autor));
@@ -65,7 +82,8 @@ const Editar = (index) => {
         } while (confirm("¿Quieres ingresar otra pista?"));
     }
 
-    local.push(edicion);
+    /* con el metodo splice lo que hacia aca era pushear pero como no lo vimos use esta forma de resolverlo */
+    local[index] = edicion;
 
     localStorage.setItem("discos", JSON.stringify(local));
 

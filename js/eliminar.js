@@ -15,9 +15,21 @@
 // Función Eliminar:
 const Eliminar = (index) => {
     /* Compruebo que el indice existe, si no existe devuelta -1, por eso pregunto si es mayor y ahi saco el elemento (ese solo) de ese index. */
+    /* Como no vimos splice lo saco y lo hago de otra forma */
+    /*
     if (index > -1) {
         local.splice(index, 1);
     }
+    */
+
+    let discosNoEliminados = [];
+    for (let i = 0; i < local.length; i++) {
+        if (local[i] !== local[index]) {
+            discosNoEliminados.push(local[i]);
+        }
+    }
+
+    local = discosNoEliminados;
 
     /* Luego con ese item eliminado mando al localstorage el string con toda la data de los discos, excepto el que se pidio eliminar */
     /* Tambien compruebo, que si elimina el ultimo que elimine el localStorage completo */
@@ -48,7 +60,18 @@ const eliminarDiscosCompleto = () => {
 
 // Función Eliminar Pista
 const EliminarPista = (indexLocal, indexPistas) => {
-    local[indexLocal].pistas.splice(indexPistas, 1);
+
+    /* local[indexLocal].pistas.splice(indexPistas, 1); */
+
+    /* Como no vimos splice lo resuelvo de esta manera */
+    let pistasNoEliminadas = [];
+    for (let i = 0; i < local[indexLocal].pistas.length; i++) {
+        if (local[indexLocal].pistas[i] !== local[indexLocal].pistas[indexPistas]) {
+            pistasNoEliminadas.push(local[indexLocal].pistas[i]);
+        }
+    }
+
+    local[indexLocal].pistas = pistasNoEliminadas;
 
     localStorage.setItem("discos", JSON.stringify(local));
 
@@ -62,8 +85,9 @@ const EliminarPista = (indexLocal, indexPistas) => {
     alertPersonalizado("Se ha eliminado la pista correctamente.");
 
     setTimeout(() => {
-        /* Para que se actualice el alert tambien vuelvo a llamar a la funcion */
+        /* Para que se actualice el alert donde se ven las pistas tambien vuelvo a llamar a la funcion */
         verPistasExtras(indexLocal);
     }, 1500);
+
 
 };

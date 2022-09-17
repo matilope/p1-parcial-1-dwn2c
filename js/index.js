@@ -200,31 +200,51 @@ const Mostrar = (index) => {
 const Cargar = () => {
   do {
     nombre = prompt("Ingresa el nombre del disco");
+
+    if (!isNaN(nombre) && nombre !== null) {
+      nombre = prompt("Ingresa el nombre del disco, recuerda que no puede empezar con un numero");
+    }
+
+    /* Si el usuario cancela termino la funcion */
     if (nombre === null) {
       return;
     }
+
   } while (!isNaN(nombre));
 
   do {
     autor = prompt("Ingresa el autor del disco");
+
+    if (!isNaN(autor) && autor !== null) {
+      autor = prompt("Ingresa el nombre del disco, recuerda que no puede empezar con un numero");
+    }
+
+    /* Si el usuario cancela termino la funcion */
     if (autor === null) {
       return;
     }
+
   } while (!isNaN(autor));
 
   do {
     codigoUnico = prompt("Ingresa el codigo numérico único del disco (1-999)");
+
+    /* Si el usuario cancela termino la funcion */
     if (codigoUnico === null) {
       return;
     }
+
     codigoUnico = parseInt(codigoUnico);
+
     if (local) {
       for (let i = 0; i < local.length; i++) {
+        /* Uso un while para que vuelva a repetir en caso de que el usuario vuelva a poner un codigo que ya fue utilizado y guardado en el localstorage */
         while (local[i].codigoUnico == codigoUnico) {
           codigoUnico = parseInt(prompt("Codigo duplicado, por favor recuerdo que el codigo de cada disco debe ser único"));
         }
       }
     }
+
   } while (!(codigoUnico >= 1 && codigoUnico <= 999));
 
   do {
