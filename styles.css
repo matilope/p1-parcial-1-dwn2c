@@ -219,6 +219,9 @@ footer a:hover {
     }
 }
 
+
+/* Alert divs */
+
 .divExtra {
     position: absolute;
     background: rgba(0, 0, 0, 0.4);
@@ -237,11 +240,15 @@ footer a:hover {
     border-radius: 12px;
 }
 
+
+/* Boton eliminar pista en alert */
+
 .eliminarPista {
     margin: 4px 16px;
     background-color: #d34f4f;
     border: 1px solid #aa6767;
 }
+
 
 /* Responsive */
 
@@ -266,7 +273,8 @@ footer a:hover {
         font-size: 1.6rem;
     }
 
-    h2 {
-        font-size: 1.4rem;
+    header {
+        margin: 0;
     }
+
 }
