@@ -165,7 +165,7 @@ const Mostrar = (index) => {
         /* Nombre del disco */
         h3.textContent = local[i].nombre;
 
-        /* Dos variables, una funcion muestra la duración total de cada disco y la otra funcion solo me devuelve un solo objeto que tiene el codigoUnico del disco para poder compararlo y tambien la duracion */
+        /* Dos variables, una funcion muestra la duración total de cada disco y la otra funcion solo me devuelve un solo objeto que tiene el codigoUnico del disco para poder compararlo y avisar que es el disco que mas duracion tiene */
         let duraciones = duracionTotal();
         let mayorDuracion = duracionMayor();
 

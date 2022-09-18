@@ -76,13 +76,20 @@ function duracionTotal() {
 function duracionMayor() {
     let arrayDuracion = duracionTotal();
 
-    arrayDuracion.sort((a, b) => {
-        return b.duracion - a.duracion;
-    });
+    // Le saque el sort a esta funcion
+    let duracionMaxima = Number.NEGATIVE_INFINITY;
+    let codigoUnico = null;
+    for (let i = 0; i < arrayDuracion.length; i++) {
+        if (arrayDuracion[i].duracion > duracionMaxima) {
+            duracionMaxima = arrayDuracion[i].duracion;
+            codigoUnico = arrayDuracion[i].codigoUnico;
+        }
+    }
 
-    return arrayDuracion[0];
+    return {
+        codigoUnico
+    };
 }
-
 
 // Funcion en donde creo varios li dependiendo de la cantidad de pistas que tengo en dicho disco
 function verPistasExtras(index) {
