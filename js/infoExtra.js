@@ -83,13 +83,14 @@ function duracionMayor() {
     return arrayDuracion[0];
 }
 
+
 // Funcion en donde creo varios li dependiendo de la cantidad de pistas que tengo en dicho disco
 function verPistasExtras(index) {
     let ulPistas = '';
     for (let j = 0; j < local[index].pistas.length; j++) {
         ulPistas += `<li>Nombre de pista: ${local[index].pistas[j].pista}</li><li>Duración de la pista: 
       <span class="${local[index].pistas[j].duracion > 180 ? "duracionMayor" : "duracionMenor"}">${local[index].pistas[j].duracion}</span>
-      <button class="eliminarPista" onclick="EliminarPista(${index}, ${j});">X</button></li>`;
+      <button class="eliminarPista" onclick="eliminarPista(${index}, ${j});">X</button></li>`;
         /* Le agrego un separador para que el usuario pueda distinguir las distintas pistas */
         if (local[index].pistas.length > 1 && local[index].pistas.length - 1 !== j) {
             ulPistas += `<hr style="width:80%; margin:6px 0 6px 0; border-color:yellow;" />`;

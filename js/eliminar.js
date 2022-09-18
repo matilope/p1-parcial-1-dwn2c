@@ -59,7 +59,7 @@ const eliminarDiscosCompleto = () => {
 };
 
 // Función Eliminar Pista
-const EliminarPista = (indexLocal, indexPistas) => {
+const eliminarPista = (indexLocal, indexPistas) => {
 
     /* local[indexLocal].pistas.splice(indexPistas, 1); */
 
