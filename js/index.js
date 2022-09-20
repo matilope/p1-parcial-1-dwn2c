@@ -167,7 +167,7 @@ const Mostrar = (index) => {
         /* li's con el resto de los datos */
         let ulData = `<li>Autor: ${local[i].autor}</li>
                       <li>Codigo unico: ${local[i].codigoUnico}</li>
-                      <li>Duración total: ${duracionMayor() == local[i].codigoUnico ?  `${duraciones[i].duracion} segundos <span style="display:block; color:#3b3bff;">*Es el disco con mayor duración*</span>` : `${duraciones[i].duracion} segundos`}</li>
+                      <li>Duración total: ${duracionMayor() == local[i].codigoUnico ? `${duraciones[i].duracion} segundos <span style="display:block; color:#3b3bff;">*Es el disco con mayor duración*</span>` : `${duraciones[i].duracion} segundos`}</li>
                       <li>Pistas (total ${local[i].pistas.length}): <button class="verpistas" onclick="verPistasExtras(${i});">Ver pistas</button></li>`;
 
         /* Inserto los li's dentro de un ul */
