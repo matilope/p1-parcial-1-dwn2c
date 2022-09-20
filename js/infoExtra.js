@@ -89,7 +89,11 @@ function duracionMayor() {
     let duracionMaxima = Number.NEGATIVE_INFINITY;
     let codigoUnico = null;
     for (let i = 0; i < arrayDuracion.length; i++) {
+<<<<<<< HEAD
         /* Cuando se la condicion de abajo se actualiza el codigo unico */
+=======
+    /* Cuando se la condicion de abajo se actualiza el codigo unico */
+>>>>>>> 1e2524b0562b4ee9a607bbe5cb4a82af25b8f41b
         if (arrayDuracion[i].duracion > duracionMaxima) {
             duracionMaxima = arrayDuracion[i].duracion;
             codigoUnico = arrayDuracion[i].codigoUnico;
