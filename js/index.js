@@ -25,12 +25,6 @@ let disco,
   main = document.querySelector("main"),
   ulPistas = null;
 
-if (localStorage.getItem("discos")) {
-  local = JSON.parse(localStorage.getItem("discos")).sort((a, b) => {
-    return a.codigoUnico - b.codigoUnico;
-  });
-}
-
 // Clase disco:
 class Disco {
   constructor(nombre, autor, codigoUnico, pistas) {
@@ -165,14 +159,15 @@ const Mostrar = (index) => {
         /* Nombre del disco */
         h3.textContent = local[i].nombre;
 
-        /* Dos variables, una funcion muestra la duración total de cada disco y la otra funcion solo me devuelve un solo objeto que tiene el codigoUnico del disco para poder compararlo y avisar que es el disco que mas duracion tiene */
+        /* La funcion muestra la duración total de cada disco */
         let duraciones = duracionTotal();
-        let mayorDuracion = duracionMayor();
+
+        // La funcion duracionMayor solo me devuelve el codigoUnico del disco para poder compararlo y avisar que es el disco que mas duracion tiene, guardarlo en una variable es mas entendible pero preferi cambiarlo y optimizar un poco el codigo
 
         /* li's con el resto de los datos */
         let ulData = `<li>Autor: ${local[i].autor}</li>
                       <li>Codigo unico: ${local[i].codigoUnico}</li>
-                      <li>Duración total: ${mayorDuracion.codigoUnico == local[i].codigoUnico ?  `${duraciones[i].duracion} segundos <span style="display:block; color:#3b3bff;">*Es el disco con mayor duración*</span>` : `${duraciones[i].duracion} segundos`}</li>
+                      <li>Duración total: ${duracionMayor() == local[i].codigoUnico ?  `${duraciones[i].duracion} segundos <span style="display:block; color:#3b3bff;">*Es el disco con mayor duración*</span>` : `${duraciones[i].duracion} segundos`}</li>
                       <li>Pistas (total ${local[i].pistas.length}): <button class="verpistas" onclick="verPistasExtras(${i});">Ver pistas</button></li>`;
 
         /* Inserto los li's dentro de un ul */

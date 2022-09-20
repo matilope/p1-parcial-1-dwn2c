@@ -16,27 +16,40 @@
 
 // Función Ver Mas Informacion
 function verMasInformacion(index) {
-    let dataExtra = local[index].pistas;
-    let duracionTotal = null;
-    let cantidadPistas = dataExtra.length;
-    let mayorDuracion = Number.NEGATIVE_INFINITY;
+    let dataExtra;
+    let duracionTotal;
+    let cantidadPistas;
+    let mayorDuracion;
     let pistaMayorDuracion;
 
-    for (let i = 0; i < dataExtra.length; i++) {
-        duracionTotal += dataExtra[i].duracion;
-        if (dataExtra[i].duracion > mayorDuracion) {
-            mayorDuracion = dataExtra[i].duracion;
-            if (dataExtra[i].duracion === mayorDuracion) {
-                pistaMayorDuracion = dataExtra[i].pista;
+    if (local[index].pistas && local[index].pistas.length > 0) {
+        dataExtra = local[index].pistas;
+        duracionTotal = null;
+        cantidadPistas = dataExtra.length;
+        mayorDuracion = Number.NEGATIVE_INFINITY;
+
+        for (let i = 0; i < dataExtra.length; i++) {
+            duracionTotal += dataExtra[i].duracion;
+            if (dataExtra[i].duracion > mayorDuracion) {
+                mayorDuracion = dataExtra[i].duracion;
+                if (dataExtra[i].duracion === mayorDuracion) {
+                    pistaMayorDuracion = dataExtra[i].pista;
+                }
             }
         }
+
+    } else {
+        duracionTotal = 0;
+        cantidadPistas = 0;
+        mayorDuracion = null;
+        pistaMayorDuracion = null;
     }
 
     alertPersonalizado(
         `<li>Cantidad de pistas: <span style="color:#ffeb00;">${cantidadPistas}</span></li>
       <li>Duración total de las pistas: <span style="color:#ffeb00;">${duracionTotal} segundos</span></li>
-      <li>Promedio de las pistas: <span style="color:#ffeb00;">${parseFloat((duracionTotal / cantidadPistas).toFixed(1))} segundos</span></li>
-      <li>Pista con mayor duración: <span style="color:#ffeb00;">${pistaMayorDuracion}, ${mayorDuracion} segundos</span></li>`, true
+      <li>Promedio de las pistas: <span style="color:#ffeb00;">${parseFloat((duracionTotal!==null ? duracionTotal : 0 / cantidadPistas).toFixed(1))} segundos</span></li>
+      <li>Pista con mayor duración: <span style="color:#ffeb00;">${pistaMayorDuracion !==null ? pistaMayorDuracion : 'No hay pistas cargadas'} ${mayorDuracion !==null ? `, ${mayorDuracion} segundos` : ''}</span></li>`, true
     );
 };
 
@@ -64,10 +77,6 @@ function duracionTotal() {
         }
     }
 
-    arrayDuracion.sort((a, b) => {
-        return b.codigoUnico - a.codigoUnico;
-    });
-
     return arrayDuracion;
 
 }
@@ -80,15 +89,14 @@ function duracionMayor() {
     let duracionMaxima = Number.NEGATIVE_INFINITY;
     let codigoUnico = null;
     for (let i = 0; i < arrayDuracion.length; i++) {
+        /* Cuando se la condicion de abajo se actualiza el codigo unico */
         if (arrayDuracion[i].duracion > duracionMaxima) {
             duracionMaxima = arrayDuracion[i].duracion;
             codigoUnico = arrayDuracion[i].codigoUnico;
         }
     }
 
-    return {
-        codigoUnico
-    };
+    return codigoUnico;
 }
 
 // Funcion en donde creo varios li dependiendo de la cantidad de pistas que tengo en dicho disco
