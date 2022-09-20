@@ -48,7 +48,7 @@ function verMasInformacion(index) {
     alertPersonalizado(
         `<li>Cantidad de pistas: <span style="color:#ffeb00;">${cantidadPistas}</span></li>
       <li>Duración total de las pistas: <span style="color:#ffeb00;">${duracionTotal} segundos</span></li>
-      <li>Promedio de las pistas: <span style="color:#ffeb00;">${parseFloat((duracionTotal!==null ? duracionTotal : 0 / cantidadPistas).toFixed(1))} segundos</span></li>
+      <li>Promedio de las pistas: <span style="color:#ffeb00;">${duracionTotal == 0 ? '0' : parseFloat((duracionTotal / cantidadPistas).toFixed(1))} segundos</span></li>
       <li>Pista con mayor duración: <span style="color:#ffeb00;">${pistaMayorDuracion !==null ? pistaMayorDuracion : 'No hay pistas cargadas'} ${mayorDuracion !==null ? `, ${mayorDuracion} segundos` : ''}</span></li>`, true
     );
 };
@@ -89,11 +89,7 @@ function duracionMayor() {
     let duracionMaxima = Number.NEGATIVE_INFINITY;
     let codigoUnico = null;
     for (let i = 0; i < arrayDuracion.length; i++) {
-<<<<<<< HEAD
         /* Cuando se la condicion de abajo se actualiza el codigo unico */
-=======
-    /* Cuando se la condicion de abajo se actualiza el codigo unico */
->>>>>>> 1e2524b0562b4ee9a607bbe5cb4a82af25b8f41b
         if (arrayDuracion[i].duracion > duracionMaxima) {
             duracionMaxima = arrayDuracion[i].duracion;
             codigoUnico = arrayDuracion[i].codigoUnico;
