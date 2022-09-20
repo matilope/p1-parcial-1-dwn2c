@@ -87,7 +87,7 @@ const eliminarPista = (indexLocal, indexPistas) => {
     setTimeout(() => {
         /* Para que se actualice el alert donde se ven las pistas tambien vuelvo a llamar a la funcion */
         verPistasExtras(indexLocal);
-    }, 1500);
+    }, 2000);
 
 
 };

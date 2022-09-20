@@ -38,19 +38,17 @@ function verMasInformacion(index) {
             }
         }
 
+        alertPersonalizado(
+            `<li>Cantidad de pistas: <span style="color:#ffeb00;">${cantidadPistas}</span></li>
+          <li>Duración total de las pistas: <span style="color:#ffeb00;">${duracionTotal} segundos</span></li>
+          <li>Promedio de las pistas: <span style="color:#ffeb00;">${parseFloat((duracionTotal / cantidadPistas).toFixed(1))} segundos</span></li>
+          <li>Pista con mayor duración: <span style="color:#ffeb00;">${pistaMayorDuracion, mayorDuracion} segundos</span></li>`, true
+        );
+
     } else {
-        duracionTotal = 0;
-        cantidadPistas = 0;
-        mayorDuracion = null;
-        pistaMayorDuracion = null;
+        alertPersonalizado('Informacion no disponible, carga nuevas pistas para poder acceder.');
     }
 
-    alertPersonalizado(
-        `<li>Cantidad de pistas: <span style="color:#ffeb00;">${cantidadPistas}</span></li>
-      <li>Duración total de las pistas: <span style="color:#ffeb00;">${duracionTotal} segundos</span></li>
-      <li>Promedio de las pistas: <span style="color:#ffeb00;">${duracionTotal == 0 ? '0' : parseFloat((duracionTotal / cantidadPistas).toFixed(1))} segundos</span></li>
-      <li>Pista con mayor duración: <span style="color:#ffeb00;">${pistaMayorDuracion !==null ? pistaMayorDuracion : 'No hay pistas cargadas'} ${mayorDuracion !==null ? `, ${mayorDuracion} segundos` : ''}</span></li>`, true
-    );
 };
 
 // Funcion duración total de cada disco

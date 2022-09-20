@@ -55,8 +55,10 @@ function alertPersonalizado(mensaje, alerta) {
     } else {
         let p = document.createElement("p");
         div.appendChild(p);
-        p.style = "color:white;";
         p.innerHTML = mensaje;
+        p.style = "color:white; text-align:center;";
+        div.style.width = p.clientWidth + 80 + "px";
+        div.style.height = p.clientHeight + 40 + "px";
         setTimeout(() => {
             document.body.style = "overflow-y:scroll;";
             document.body.removeChild(div);

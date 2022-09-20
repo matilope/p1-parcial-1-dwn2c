@@ -25,7 +25,7 @@ const Editar = (index) => {
         /* Verifico si es null para permitir al usuario cancelar en caso de arrepentirse de editar esta variable */
         if (edicion.nombre === null) {
             /* Si el usuario cancela significa que quiere salir de la edicion, entonces termino la funcion y no se actualiza la misma */
-            alertPersonalizado("La edicion se ha cancelado");
+            alertPersonalizado("La edicion se ha cancelado.");
 
             /* Como ahora edicion.nombre es null, uso la variable nombre en donde tengo el valor que estaba anteriormente y se lo vuelvo a colocar a edicion.nombre */
             edicion.nombre = nombre;
@@ -46,7 +46,7 @@ const Editar = (index) => {
         /* Verifico si es null para permitir al usuario cancelar en caso de arrepentirse de editar esta variable */
         if (edicion.autor === null) {
             /* Si el usuario cancela significa que quiere salir de la edicion, entonces termino la funcion y no se actualiza la misma */
-            alertPersonalizado("La edicion se ha cancelado");
+            alertPersonalizado("La edicion se ha cancelado.");
 
             /* Como ahora edicion.autor es null, uso la variable autor en donde tengo el valor que estaba anteriormente y se lo vuelvo a colocar a edicion.autor */
             /* Lo mismo con nombre, tengo que guardarlo nuevamente como estaba al principio asi al editar puede volver a ver el resultado que tenia inicialmente */
