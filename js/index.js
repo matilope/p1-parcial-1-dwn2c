@@ -196,6 +196,11 @@ const Cargar = () => {
   do {
     nombre = prompt("Ingresa el nombre del disco");
 
+    /* Si el usuario cancela termino la funcion */
+    if (nombre === null) {
+      return;
+    }
+    
     while (nombre.length < 1) {
       nombre = prompt("Ingresa el nombre del disco, recuerda que no puede quedar vacio");
     }
@@ -204,15 +209,15 @@ const Cargar = () => {
       nombre = prompt("Ingresa el nombre del disco, recuerda que no puede empezar con un numero");
     }
 
-    /* Si el usuario cancela termino la funcion */
-    if (nombre === null) {
-      return;
-    }
-
   } while (!isNaN(nombre));
 
   do {
     autor = prompt("Ingresa el autor del disco");
+    
+    /* Si el usuario cancela termino la funcion */
+    if (autor === null) {
+      return;
+    }
 
     while (autor.length < 1) {
       autor = prompt("Ingresa el autor del disco, recuerda que no puede quedar vacio");
@@ -220,11 +225,6 @@ const Cargar = () => {
 
     while (!isNaN(autor) && autor !== null) {
       autor = prompt("Ingresa el autor del disco, recuerda que no puede empezar con un numero");
-    }
-
-    /* Si el usuario cancela termino la funcion */
-    if (autor === null) {
-      return;
     }
 
   } while (!isNaN(autor));
