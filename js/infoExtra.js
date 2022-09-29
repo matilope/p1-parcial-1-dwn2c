@@ -21,33 +21,27 @@ function verMasInformacion(index) {
     let cantidadPistas;
     let mayorDuracion;
     let pistaMayorDuracion;
+    dataExtra = local[index].pistas;
+    duracionTotal = null;
+    cantidadPistas = dataExtra.length;
+    mayorDuracion = Number.NEGATIVE_INFINITY;
 
-    if (local[index].pistas && local[index].pistas.length > 0) {
-        dataExtra = local[index].pistas;
-        duracionTotal = null;
-        cantidadPistas = dataExtra.length;
-        mayorDuracion = Number.NEGATIVE_INFINITY;
-
-        for (let i = 0; i < dataExtra.length; i++) {
-            duracionTotal += dataExtra[i].duracion;
-            if (dataExtra[i].duracion > mayorDuracion) {
-                mayorDuracion = dataExtra[i].duracion;
-                if (dataExtra[i].duracion === mayorDuracion) {
-                    pistaMayorDuracion = dataExtra[i].pista;
-                }
+    for (let i = 0; i < dataExtra.length; i++) {
+        duracionTotal += dataExtra[i].duracion;
+        if (dataExtra[i].duracion > mayorDuracion) {
+            mayorDuracion = dataExtra[i].duracion;
+            if (dataExtra[i].duracion === mayorDuracion) {
+                pistaMayorDuracion = dataExtra[i].pista;
             }
         }
+    }
 
-        alertPersonalizado(
-            `<li>Cantidad de pistas: <span style="color:#ffeb00;">${cantidadPistas}</span></li>
+    alertPersonalizado(
+        `<li>Cantidad de pistas: <span style="color:#ffeb00;">${cantidadPistas}</span></li>
           <li>Duración total de las pistas: <span style="color:#ffeb00;">${duracionTotal} segundos</span></li>
           <li>Promedio de las pistas: <span style="color:#ffeb00;">${parseFloat((duracionTotal / cantidadPistas).toFixed(1))} segundos</span></li>
           <li>Pista con mayor duración: <span style="color:#ffeb00;">${pistaMayorDuracion, mayorDuracion} segundos</span></li>`, true
-        );
-
-    } else {
-        alertPersonalizado('Informacion no disponible, carga nuevas pistas para poder acceder.');
-    }
+    );
 
 };
 
@@ -109,12 +103,5 @@ function verPistasExtras(index) {
             ulPistas += `<hr style="width:80%; margin:6px 0 6px 0; border-color:yellow;" />`;
         }
     }
-
-    /* Si el length es 0 es porque no hay pistas y doy una alert para avisar que no hay pistas en el disco */
-    if (local[index].pistas.length == 0) {
-        alertPersonalizado("No se han encontrado pistas..");
-    } else {
-        /* Hay pistas asi que creo el ul y lo muestro en el alert */
-        alertPersonalizado(ulPistas, true);
-    }
+    alertPersonalizado(ulPistas, true);
 }

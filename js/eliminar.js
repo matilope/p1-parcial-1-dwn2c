@@ -64,16 +64,25 @@ const eliminarPista = (indexLocal, indexPistas) => {
     /* local[indexLocal].pistas.splice(indexPistas, 1); */
 
     /* Como no vimos splice lo resuelvo de esta manera */
+
     let pistasNoEliminadas = [];
-    for (let i = 0; i < local[indexLocal].pistas.length; i++) {
-        if (local[indexLocal].pistas[i] !== local[indexLocal].pistas[indexPistas]) {
-            pistasNoEliminadas.push(local[indexLocal].pistas[i]);
+
+    let flag = true;
+
+    /* Para que no pueda eliminar la unica pista que queda, ya que las pistas eran al menos una obligatoria, mejor no permitirle al usuario eliminar la ultima que queda del disco */
+    if (local[indexLocal].pistas.length > 1) {
+        for (let i = 0; i < local[indexLocal].pistas.length; i++) {
+            if (local[indexLocal].pistas[i] !== local[indexLocal].pistas[indexPistas]) {
+                pistasNoEliminadas.push(local[indexLocal].pistas[i]);
+            }
         }
+
+        local[indexLocal].pistas = pistasNoEliminadas;
+
+        localStorage.setItem("discos", JSON.stringify(local));
+
+        flag = false;
     }
-
-    local[indexLocal].pistas = pistasNoEliminadas;
-
-    localStorage.setItem("discos", JSON.stringify(local));
 
     /* Cargo la data actualizada por si se vuelve a apretar el mismo disco */
     Mostrar();
@@ -82,7 +91,11 @@ const eliminarPista = (indexLocal, indexPistas) => {
     document.body.removeChild(document.querySelector(".animacion"));
     document.body.removeChild(document.querySelector(".divExtra"));
 
-    alertPersonalizado("Se ha eliminado la pista correctamente.");
+    if (flag) {
+        alertPersonalizado("El disco no puede quedarse sin pistas.");
+    } else {
+        alertPersonalizado("Se ha eliminado la pista correctamente.");
+    }
 
     setTimeout(() => {
         /* Para que se actualice el alert donde se ven las pistas tambien vuelvo a llamar a la funcion */

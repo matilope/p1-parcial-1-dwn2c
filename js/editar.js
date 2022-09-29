@@ -17,11 +17,6 @@ const Editar = (index) => {
     do {
         edicion.nombre = prompt("Ingresa el nombre del disco", nombre);
 
-        /* Le doy un mensaje personalizado en el prompt en caso de que escriba numeros tambien hago que este mensaje NO se muestre si el usuario cancela */
-        if (!isNaN(edicion.nombre) && edicion.nombre !== null) {
-            edicion.nombre = prompt("Ingresa el nombre del disco, recuerda que no puede empezar con un numero", nombre);
-        }
-
         /* Verifico si es null para permitir al usuario cancelar en caso de arrepentirse de editar esta variable */
         if (edicion.nombre === null) {
             /* Si el usuario cancela significa que quiere salir de la edicion, entonces termino la funcion y no se actualiza la misma */
@@ -33,15 +28,16 @@ const Editar = (index) => {
             /* Finalizo la funcion */
             return;
         }
-    } while (!isNaN(edicion.nombre));
+
+        /* Le doy un mensaje personalizado en el prompt en caso de que quede vacio y aprete aceptar, vuelva a pedir el nombre como indica en el prompt anterior y no usar un if y que intercambie con el prompt de arriba y este */
+        while (edicion.nombre.length < 1) {
+            edicion.nombre = prompt("Ingresa el nombre del disco, recuerda que no puede quedar vacio", nombre);
+        }
+
+    } while (edicion.nombre.length < 1);
 
     do {
         edicion.autor = prompt("Ingresa el autor del disco", autor);
-
-        /* Le doy un mensaje personalizado en el prompt  en caso de que escriba numeros tambien hago que este mensaje NO se muestre si el usuario cancela */
-        if (!isNaN(edicion.autor) && edicion.autor !== null) {
-            edicion.autor = prompt("Ingresa el autor del disco, recuerda que no puede empezar con un numero", autor);
-        }
 
         /* Verifico si es null para permitir al usuario cancelar en caso de arrepentirse de editar esta variable */
         if (edicion.autor === null) {
@@ -56,7 +52,13 @@ const Editar = (index) => {
             /* Finalizo la funcion */
             return;
         }
-    } while (!isNaN(edicion.autor));
+
+        /* Le doy un mensaje personalizado en el prompt en caso de que quede vacio y aprete aceptar, vuelva a pedir el autor como indica en el prompt anterior y no usar un if y que intercambie con el prompt de arriba y este */
+        while (edicion.autor.length < 1) {
+            edicion.autor = prompt("Ingresa el autor del disco, recuerda que no puede quedar vacio", autor);
+        }
+
+    } while (edicion.autor.length < 1);
 
     /* Si confirma, puede volver a ingresar mas pistas, si cancela quedan las pistas que ya tenia agregada unicamente */
 
@@ -65,7 +67,14 @@ const Editar = (index) => {
         do {
             do {
                 pista = prompt("Ingresa el nombre de la pista");
-            } while (!isNaN(pista));
+                // Aqui uso while para que no cambie entre un prompt y el otro, que si lo dejo vacio, lo pueda leer en el prompt
+                while (pista !== null && pista.length < 1) {
+                    pista = prompt("Ingresa el nombre de la pista, recuerda que no puede quedar vacio");
+                }
+                while (pista == null) {
+                    pista = prompt("El nombre de la pista es obligatoria, por favor, ingrese el nombre de la pista");
+                }
+            } while (pistas == null);
 
             do {
                 duracion = parseInt(prompt("Ingrese la duracion de la pista"));
