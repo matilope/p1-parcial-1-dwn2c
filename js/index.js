@@ -168,28 +168,56 @@ const Cargar = () => {
     if (nombre === null) {
       return;
     }
+<<<<<<< HEAD
     // Aqui uso while para que no cambie entre un prompt y el otro, que si lo dejo vacio, lo pueda leer en el prompt
+=======
+    
+>>>>>>> f313c4f61c106a0bd4fa392b78491d02c532c9ef
     while (nombre.length < 1) {
       nombre = prompt("Ingresa el nombre del disco, recuerda que no puede quedar vacio");
     }
 
+<<<<<<< HEAD
   } while (nombre.length < 1);
 
+=======
+    while (!isNaN(nombre) && nombre !== null) {
+      nombre = prompt("Ingresa el nombre del disco, recuerda que no puede empezar con un numero");
+    }
+
+  } while (!isNaN(nombre));
+>>>>>>> f313c4f61c106a0bd4fa392b78491d02c532c9ef
 
   do {
     autor = prompt("Ingresa el autor del disco");
+    
+    /* Si el usuario cancela termino la funcion */
+    if (autor === null) {
+      return;
+    }
 
+<<<<<<< HEAD
     /* Si el usuario cancela termino la funcion */
     if (autor === null) {
       return;
     }
     // Aqui uso while para que no cambie entre un prompt y el otro, que si lo dejo vacio, lo pueda leer en el prompt
+=======
+>>>>>>> f313c4f61c106a0bd4fa392b78491d02c532c9ef
     while (autor.length < 1) {
       autor = prompt("Ingresa el autor del disco, recuerda que no puede quedar vacio");
     }
 
+<<<<<<< HEAD
   } while (autor.length < 1);
 
+=======
+    while (!isNaN(autor) && autor !== null) {
+      autor = prompt("Ingresa el autor del disco, recuerda que no puede empezar con un numero");
+    }
+
+  } while (!isNaN(autor));
+>>>>>>> f313c4f61c106a0bd4fa392b78491d02c532c9ef
 
   do {
     codigoUnico = prompt("Ingresa el codigo numérico único del disco (1-999)");
