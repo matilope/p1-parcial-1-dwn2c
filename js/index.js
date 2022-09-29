@@ -64,8 +64,6 @@ const Mostrar = () => {
     if (section && eliminarTotal) {
       section.style.display = "none";
       eliminarTotal.style.display = "none";
-    } else {
-      buttonMostrar.style.display = "none";
     }
   });
 
@@ -75,11 +73,6 @@ const Mostrar = () => {
   buttonDiscoEspecifico.innerHTML = "Buscar disco especifico";
   main.appendChild(buttonDiscoEspecifico);
 
-  if (localStorage.getItem("discos") === null) {
-    main.innerHTML = `<header><h1>Programación I | Parcial 1 | LÓPEZ MUÑOZ, MATÍAS GABRIEL</h1></header>
-    <h2>Cargue una pista para poder visualizar los discos</h2>
-    <button onclick="Cargar();">Cargar nuevo disco</button>`;
-  }
 
   /* Compruebo si local existe y si no es un array vacio porque si borro todos los objetos dentro del array uno por uno, queda el array vacio y necesito validar eso para mostrar el mensaje que se muestra en el else */
   if (local && local.length > 0) {
@@ -91,8 +84,6 @@ const Mostrar = () => {
     h2.textContent = "Discos ingresados";
 
     /* informar cantidad de discos ingresados */
-
-    /* Si no esta el index no hace falta que me diga la cantidad de discos */
     alertPersonalizado("Discos ingresados: " + local.length);
 
     /* Creo un solo elemento para permitir eliminar todos los discos subidos y lo anexo al main en caso tambien de no existir el indice, cuando quiero buscar un solo disco, no hace falta que esta opcion aparezca */
@@ -101,6 +92,57 @@ const Mostrar = () => {
     eliminarTotal.style = "margin-top:40px; background-color: #2a4a8f; border-radius:10px;";
     eliminarTotal.innerHTML = "Eliminar discografia completa";
     main.appendChild(eliminarTotal);
+
+
+    /* Recorriendo el array de objetos de localstorage */
+    for (let i = 0; i < local.length; i++) {
+      /* Creando elementos */
+      let article = document.createElement("article");
+      let h3 = document.createElement("h3");
+      let ul = document.createElement("ul");
+      let editar = document.createElement("button");
+      let eliminar = document.createElement("button");
+      let verInformacion = document.createElement("button");
+      let img = document.createElement("img");
+
+      /* Seteando la informacion en los atributos y nombre de los botones */
+      img.src = "img/discos.webp";
+      img.alt = "Imagen representativa de Discos";
+      editar.setAttribute("onclick", `Editar(${i});`);
+      eliminar.setAttribute("onclick", `Eliminar(${i});`);
+      verInformacion.setAttribute("onclick", `verMasInformacion(${i});`);
+      editar.innerHTML = "Editar";
+      eliminar.innerHTML = "Eliminar";
+      verInformacion.innerHTML = "Ver mas información";
+
+      /* Anexo elementos creados */
+      section.appendChild(article);
+      article.appendChild(img);
+      article.appendChild(h3);
+      article.appendChild(ul);
+      article.appendChild(editar);
+      article.appendChild(eliminar);
+      article.appendChild(verInformacion);
+
+      /* Nombre del disco */
+      h3.textContent = local[i].nombre;
+
+      /* La funcion duracionTotal devuelve justamente, la duración total de cada disco, dejandome aprovechar el i del ciclo de arriba */
+      let duraciones = duracionTotal();
+      /* La funcion duracionMayor devuelve el codigoUnico del disco con mas duracion total */
+      let codigoUnicoDuracionMayor = duracionMayor();
+
+      /* li's con el resto de los datos */
+      let ulData = `<li>Autor: ${local[i].autor}</li>
+                      <li>Codigo unico: ${local[i].codigoUnico}</li>
+                      <li>Duración total: ${codigoUnicoDuracionMayor == local[i].codigoUnico ? `${duraciones[i].duracion} segundos <span style="display:block; color:#3b3bff;">*Es el disco con mayor duración*</span>` : `${duraciones[i].duracion} segundos`}</li>
+                      <li>Pistas (total ${local[i].pistas.length}): <button class="verpistas" onclick="verPistasExtras(${i});">Ver pistas</button></li>`;
+
+      /* Inserto los li's dentro de un ul */
+      ul.innerHTML = ulData;
+    }
+
+
   } else {
     // Doy un mensaje de que no hay discos si es que el usuario ejecuta la funcion de mostrar y no hay discos cargados
     let p = document.createElement("p");
@@ -109,53 +151,6 @@ const Mostrar = () => {
     p.innerHTML = "No se ha encontrado ningun disco";
   }
 
-  /* Recorriendo el array de objetos de localstorage */
-  for (let i = 0; i < local.length; i++) {
-    /* Creando elementos */
-    let article = document.createElement("article");
-    let h3 = document.createElement("h3");
-    let ul = document.createElement("ul");
-    let editar = document.createElement("button");
-    let eliminar = document.createElement("button");
-    let verInformacion = document.createElement("button");
-    let img = document.createElement("img");
-
-    /* Seteando la informacion en los atributos y nombre de los botones */
-    img.src = "img/discos.webp";
-    img.alt = "Imagen representativa de Discos";
-    editar.setAttribute("onclick", `Editar(${i});`);
-    eliminar.setAttribute("onclick", `Eliminar(${i});`);
-    verInformacion.setAttribute("onclick", `verMasInformacion(${i});`);
-    editar.innerHTML = "Editar";
-    eliminar.innerHTML = "Eliminar";
-    verInformacion.innerHTML = "Ver mas información";
-
-    /* Anexo elementos creados */
-    section.appendChild(article);
-    article.appendChild(img);
-    article.appendChild(h3);
-    article.appendChild(ul);
-    article.appendChild(editar);
-    article.appendChild(eliminar);
-    article.appendChild(verInformacion);
-
-    /* Nombre del disco */
-    h3.textContent = local[i].nombre;
-
-    /* La funcion duracionTotal devuelve justamente, la duración total de cada disco, dejandome aprovechar el i del ciclo de arriba */
-    let duraciones = duracionTotal();
-    /* La funcion duracionMayor devuelve el codigoUnico del disco con mas duracion total */
-    let codigoUnicoDuracionMayor = duracionMayor();
-
-    /* li's con el resto de los datos */
-    let ulData = `<li>Autor: ${local[i].autor}</li>
-                      <li>Codigo unico: ${local[i].codigoUnico}</li>
-                      <li>Duración total: ${codigoUnicoDuracionMayor == local[i].codigoUnico ? `${duraciones[i].duracion} segundos <span style="display:block; color:#3b3bff;">*Es el disco con mayor duración*</span>` : `${duraciones[i].duracion} segundos`}</li>
-                      <li>Pistas (total ${local[i].pistas.length}): <button class="verpistas" onclick="verPistasExtras(${i});">Ver pistas</button></li>`;
-
-    /* Inserto los li's dentro de un ul */
-    ul.innerHTML = ulData;
-  }
 };
 
 // Función Cargar:
@@ -168,56 +163,33 @@ const Cargar = () => {
     if (nombre === null) {
       return;
     }
-<<<<<<< HEAD
     // Aqui uso while para que no cambie entre un prompt y el otro, que si lo dejo vacio, lo pueda leer en el prompt
-=======
-    
->>>>>>> f313c4f61c106a0bd4fa392b78491d02c532c9ef
     while (nombre.length < 1) {
       nombre = prompt("Ingresa el nombre del disco, recuerda que no puede quedar vacio");
     }
 
-<<<<<<< HEAD
   } while (nombre.length < 1);
 
-=======
-    while (!isNaN(nombre) && nombre !== null) {
-      nombre = prompt("Ingresa el nombre del disco, recuerda que no puede empezar con un numero");
-    }
-
-  } while (!isNaN(nombre));
->>>>>>> f313c4f61c106a0bd4fa392b78491d02c532c9ef
 
   do {
     autor = prompt("Ingresa el autor del disco");
-    
+
     /* Si el usuario cancela termino la funcion */
     if (autor === null) {
       return;
     }
 
-<<<<<<< HEAD
     /* Si el usuario cancela termino la funcion */
     if (autor === null) {
       return;
     }
     // Aqui uso while para que no cambie entre un prompt y el otro, que si lo dejo vacio, lo pueda leer en el prompt
-=======
->>>>>>> f313c4f61c106a0bd4fa392b78491d02c532c9ef
     while (autor.length < 1) {
       autor = prompt("Ingresa el autor del disco, recuerda que no puede quedar vacio");
     }
 
-<<<<<<< HEAD
   } while (autor.length < 1);
 
-=======
-    while (!isNaN(autor) && autor !== null) {
-      autor = prompt("Ingresa el autor del disco, recuerda que no puede empezar con un numero");
-    }
-
-  } while (!isNaN(autor));
->>>>>>> f313c4f61c106a0bd4fa392b78491d02c532c9ef
 
   do {
     codigoUnico = prompt("Ingresa el codigo numérico único del disco (1-999)");

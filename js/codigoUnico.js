@@ -7,13 +7,11 @@
 const verDiscoCodigoUnico = () => {
     codigoUnico = parseInt(prompt("Ingresa el codigo numérico único del disco que quieres ver (1-999)"));
 
-    if (codigoUnico >= 1 && codigoUnico <= 999) {
+    if (codigoUnico >= 1 && codigoUnico <= 999 && localStorage.getItem("discos")) {
 
-        if (localStorage.getItem("discos")) {
-            local = JSON.parse(localStorage.getItem("discos")).sort((a, b) => {
-                return b.codigoUnico - a.codigoUnico;
-            });
-        }
+        local = JSON.parse(localStorage.getItem("discos")).sort((a, b) => {
+            return b.codigoUnico - a.codigoUnico;
+        });
 
         let index = null;
 
