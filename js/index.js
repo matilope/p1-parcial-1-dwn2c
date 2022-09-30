@@ -1,5 +1,9 @@
 /**
  * Funcion mostrar crea elementos html con la informacion que hay dentro del localStorage con la clave discos
+ * @param {number} index parametro opcional, el mismo se lo usa para reutilizar esta funcion en caso de que el usuario quiera ver un solo disco
+ * el alert de discos ingresados se muestra si no se pasa el parametro
+ * en el for igualo al principio del bloque el i con el index
+ * despues utilizo break al final del for para que no vuelva a ejecutarse y se termine alli el recorrido y solo me termine mostrando el disco con el codigo unico solicitado
  * @returns no devuelve nada
  * 
  * Funcion cargar pregunta al usuario y crea un objeto con la informacion que el usuario le otorgo, no recibe ningun parametro
@@ -35,7 +39,7 @@ class Disco {
 }
 
 // Función Mostrar:
-const Mostrar = () => {
+const Mostrar = (index) => {
   /* Reseteo el main para cuando llamo a la funcion Mostrar se me muestre la data actualizada, entonces borro la data y luego se pone la data actualizada del local cada vez que se ejecuta la funcion */
   main.innerHTML = `<header><h1>Programación I | Parcial 1 | LÓPEZ MUÑOZ, MATÍAS GABRIEL</h1></header>
                     <button onclick="Cargar();">Cargar nuevo disco</button>
@@ -83,8 +87,11 @@ const Mostrar = () => {
     section.appendChild(h2);
     h2.textContent = "Discos ingresados";
 
-    /* informar cantidad de discos ingresados */
-    alertPersonalizado("Discos ingresados: " + local.length);
+    /* Informar cantidad de discos ingresados en caso de que no haya buscado solo un disco */
+    /* A veces si ponia por ej un codigoUnico existente de 767, me daba 0 el index y se daba la alerta */
+    if (!index && index !== 0) {
+      alertPersonalizado("Discos ingresados: " + local.length);
+    }
 
     /* Creo un solo elemento para permitir eliminar todos los discos subidos y lo anexo al main en caso tambien de no existir el indice, cuando quiero buscar un solo disco, no hace falta que esta opcion aparezca */
     eliminarTotal = document.createElement("button");
@@ -96,6 +103,12 @@ const Mostrar = () => {
 
     /* Recorriendo el array de objetos de localstorage */
     for (let i = 0; i < local.length; i++) {
+
+      /* Re utilizo funcion mostrar usando el index si es que se le pasa, eso me deja ver solo un unico disco */
+      if (index) {
+        i = index;
+      }
+
       /* Creando elementos */
       let article = document.createElement("article");
       let h3 = document.createElement("h3");
@@ -129,6 +142,7 @@ const Mostrar = () => {
 
       /* La funcion duracionTotal devuelve justamente, la duración total de cada disco, dejandome aprovechar el i del ciclo de arriba */
       let duraciones = duracionTotal();
+
       /* La funcion duracionMayor devuelve el codigoUnico del disco con mas duracion total */
       let codigoUnicoDuracionMayor = duracionMayor();
 
@@ -140,6 +154,12 @@ const Mostrar = () => {
 
       /* Inserto los li's dentro de un ul */
       ul.innerHTML = ulData;
+
+      /* Rompo el ciclo en caso de que i sea igual a index, o sea se dio la condicion de arriba y corto el ciclo aca */
+      if (i == index) {
+        break;
+      }
+
     }
 
 
