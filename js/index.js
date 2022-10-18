@@ -199,10 +199,6 @@ const Cargar = () => {
       return;
     }
 
-    /* Si el usuario cancela termino la funcion */
-    if (autor === null) {
-      return;
-    }
     // Aqui uso while para que no cambie entre un prompt y el otro, que si lo dejo vacio, lo pueda leer en el prompt
     while (autor.length < 1) {
       autor = prompt("Ingresa el autor del disco, recuerda que no puede quedar vacio");
@@ -221,17 +217,13 @@ const Cargar = () => {
 
     codigoUnico = parseInt(codigoUnico);
 
-    if (local) {
-      for (let i = 0; i < local.length; i++) {
-        /* Uso un while para que vuelva a repetir en caso de que el usuario vuelva a poner un codigo que ya fue utilizado y guardado en el localstorage */
-        while (local[i].codigoUnico == codigoUnico) {
-          codigoUnico = parseInt(prompt("Codigo duplicado, por favor recuerdo que el codigo de cada disco debe ser único"));
-        }
-      }
+    while(!(codigoUnico >= 1 && codigoUnico <= 999)){
+      codigoUnico = prompt("Ingresa el codigo numérico único del disco (1-999)");
     }
 
-  } while (!(codigoUnico >= 1 && codigoUnico <= 999));
+    var check = chequearCodigoUnico(codigoUnico);
 
+  } while (check);
 
   do {
 
@@ -278,3 +270,21 @@ const Cargar = () => {
   alertPersonalizado("Se ha creado el disco correctamente..");
 
 };
+
+
+
+
+function chequearCodigoUnico(codigoUnico){
+  let flag;
+  if (local) {
+    for (let i = 0; i < local.length; i++) {
+      if (local[i].codigoUnico == codigoUnico) {
+        flag = true;
+        break;
+      } else {
+        flag = false;
+      }
+    }
+    return flag;
+  }
+}
